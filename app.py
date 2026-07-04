@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 
 # Page configuration
-st.set_page_config(page_title="Holstein Ca Predictor - Israel", page_icon="🥛", layout="centered")
+st.set_page_config(page_title="Holstein Ca Predictor", page_icon="🥛", layout="centered")
 
 st.title("🥛 Holstein Calcium Absorption Predictor")
 st.markdown("### 🎓 MSc Research Project | Hebrew University of Jerusalem (HUJI)")
