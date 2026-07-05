@@ -63,3 +63,60 @@ elif predicted_absorption > 55.0:
     st.info("📈 **High Activity:** Intestinal active transport channels upregulated (high metabolic draw).")
 else:
     st.success("✅ **Normal Range:** Physiological baseline absorption levels maintained.")
+    import streamlit as st
+
+# 1. Section Divider and Header
+st.markdown("---")
+st.header("🐄 Holstein Cow Calcium Apparent Absorption Model")
+
+# 2. Metric Input Selectors
+col_input1, col_input2 = st.columns(2)
+with col_input1:
+    ca_intake = st.number_input("Calcium Intake in Feed (grams/day):", min_value=1.0, value=100.0, step=5.0)
+with col_input2:
+    ca_excrete = st.number_input("Calcium Excreted in Feces (grams/day):", min_value=0.0, value=60.0, step=5.0)
+
+# 3. Dynamic Biological Math Processing
+ca_absorbed = ca_intake - ca_excrete
+if ca_intake > 0:
+    apparent_absorption_pct = (ca_absorbed / ca_intake) * 100
+else:
+    apparent_absorption_pct = 0.0
+
+# 4. Live Metric KPI Scoreboards
+col_res1, col_res2, col_res3 = st.columns(3)
+with col_res1:
+    st.metric(label="📥 Intake Calcium", value=f"{ca_intake} g")
+with col_res2:
+    st.metric(label="💩 Excreted Calcium", value=f"{ca_excrete} g", delta=f"-{ca_excrete} g", delta_color="inverse")
+with col_res3:
+    st.metric(label="✅ Apparent Absorbed", value=f"{ca_absorbed} g")
+
+# 5. Scientific Equation Breakdown
+st.markdown("### 🧮 Apparent Absorption Formula")
+st.latex(r"\text{Apparent Absorption \%} = \left( \frac{\text{Intake Calcium} - \text{Excreted Calcium}}{\text{Intake Calcium}} \right) \times 100")
+st.info(f"**Step-by-step Math:** (({ca_intake}g - {ca_excrete}g) ÷ {ca_intake}g) × 100 = **{apparent_absorption_pct:.1f}%**")
+
+# 6. Conceptual Diagram Visual Flowchart Layout
+st.markdown(
+    f"""
+    <div style="display: flex; justify-content: space-around; align-items: center; background-color: #f9f9f9; padding: 20px; border-radius: 8px; border: 1px solid #eaeaea; margin-top: 15px;">
+        <div style="text-align: center; background-color: #2b7bba; color: white; padding: 12px; border-radius: 6px; width: 25%;">
+            <p style="margin: 0; font-weight: bold;">1. Feed Intake</p>
+            <p style="font-size: 18px; margin: 3px 0 0 0;">{ca_intake} g</p>
+        </div>
+        <div style="font-size: 24px; color: #2b7bba;">➡️</div>
+        <div style="text-align: center; background-color: #ffffff; color: #333; padding: 12px; border-radius: 6px; width: 30%; border: 2px solid #555;">
+            <p style="margin: 0; font-weight: bold;">🐄 Holstein Body</p>
+            <p style="font-size: 14px; margin: 3px 0 0 0;"><b>Apparent Absorption:</b> {apparent_absorption_pct:.1f}%</p>
+        </div>
+        <div style="font-size: 24px; color: #d9534f;">➡️</div>
+        <div style="text-align: center; background-color: #d9534f; color: white; padding: 12px; border-radius: 6px; width: 25%;">
+            <p style="margin: 0; font-weight: bold;">2. Fecal Waste</p>
+            <p style="font-size: 18px; margin: 3px 0 0 0;">{ca_excrete} g</p>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
