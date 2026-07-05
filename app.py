@@ -1,23 +1,32 @@
 import streamlit as st
 import numpy as np
 
-# Page configuration
-st.set_page_config(page_title="Holstein Ca Predictor", page_icon="🥛", layout="centered")
+# Force page configuration metadata for global mobile devices
+st.set_page_config(
+    page_title="Holstein Ca Predictor", 
+    page_icon="🥛", 
+    layout="centered"
+)
 
 st.title("🥛 Holstein Calcium Absorption Predictor")
-st.markdown("### 🎓 MSc Research Project | Hebrew University of Jerusalem (HUJI)")
+st.markdown("### 🎓 M.Sc. Research Project | The Hebrew University of Jerusalem (HUJI)")
 st.info("🔬 Developed at the **Volcani Agricultural Research Organization**, Department of Soil, Water, and Environmental Sciences.")
+
+st.markdown("""
+**Project Objective:** 
+This interactive multi-level meta-regression tool calculates the non-linear apparent calcium absorption 
+efficiency in lactating Holstein dairy cattle. It translates core metabolic data into actionable physiological 
+insights to optimize livestock mineral management and reduce environmental excretion pathways.
+""")
 
 st.sidebar.header("🔬 Input Herd & Feed Metrics")
 
-# Input interactive sliders based on meta-analysis limits
 tmr_ca_pct = st.sidebar.slider("TMR Calcium Concentration (%)", 0.2, 2.0, 0.7, 0.05)
 dmi_kg_d = st.sidebar.slider("Dry Matter Intake (DMI, kg/day)", 10.0, 30.0, 22.0, 0.5)
 days_in_milk = st.sidebar.slider("Days in Milk (DIM)", 1, 300, 100, 5)
 urinary_ca_g_d = st.sidebar.slider("Urinary Calcium (g/day)", 0.1, 10.0, 1.5, 0.1)
 milk_ca_g_d = st.sidebar.slider("Milk Calcium Output (g/day)", 10.0, 60.0, 35.0, 1.0)
 
-# The Math Engine using your MSc thesis meta-regression coefficients
 intercept = 334.37
 beta_tmr_ca = -343.88
 beta_dmi = 17.26
@@ -30,7 +39,6 @@ int_ca_dim = 2.42
 int_ca_urinary = -9.41
 int_ca_milk = 17.04
 
-# Calculate final predicted absorption %
 predicted_absorption = (
     intercept + 
     (beta_tmr_ca * tmr_ca_pct) + 
