@@ -119,4 +119,75 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+import streamlit as st
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import numpy as np
+import base64
+import os
+
+st.markdown("---")
+st.subheader("🎬 Animated Apparent Absorption Flow Model")
+st.markdown("This animated simulation traces the path of calcium molecules, visualizing the absolute physical difference between intake metrics and fecal output waste blocks.")
+
+def generate_absorption_animation(intake_val, excrete_val):
+    # Setup plotting figure canvas
+    fig, ax = plt.subplots(figsize=(7, 3), dpi=100)
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 5)
+    ax.axis('off')
+    
+    # Draw static structural components (Mouth, Cow Body Tissue, Waste Pipeline)
+    ax.add_patch(plt.Rectangle((3.8, 1.5), 2.4, 2, fill=True, color='#f0f0f0', ec='#333333', lw=2))
+    ax.text(5.0, 2.5, "🐄 Holstein Body\n(Retention)", ha='center', va='center', weight='bold', color='#222')
+    
+    # Generate point coordinates for nutrient particle motion tracks
+    num_particles = 15
+    frames_count = 40
+    
+    # Calculate partition thresholds based on user efficiency configurations
+    absorbed_count = max(1, int(num_particles * ((intake_val - excrete_val) / intake_val)))
+    
+    particle_paths = []
+    for i in range(num_particles):
+        start_y = np.random.uniform(2.2, 2.8)
+        if i < absorbed_count:
+            # Route A: Particles entering and staying absorbed inside body mass
+            x_track = np.linspace(0.5, 5.0, frames_count)
+            y_track = np.linspace(start_y, 2.5, frames_count)
+        else:
+            # Route B: Particles bypassing retention, exiting as waste
+            x_track = np.concatenate([np.linspace(0.5, 5.0, 20), np.linspace(5.0, 9.5, 20)])
+            y_track = np.concatenate([np.linspace(start_y, 2.0, 20), np.linspace(2.0, 1.2, 20)])
+        particle_paths.append((x_track, y_track))
+        
+    scat = ax.scatter([], [], c=[], s=80, zorder=5)
+    
+    def update(frame):
+        x_display, y_display, colors = [], [], []
+        for i in range(num_particles):
+            x_display.append(particle_paths[i][0][frame])
+            y_display.append(particle_paths[i][1][frame])
+            # Highlight absorbed molecules green, unabsorbed waste paths red
+            colors.append('#2ca25f' if i < absorbed_count else '#de2d26')
+        scat.set_offsets(np.c_[x_display, y_display])
+        scat.set_color(colors)
+        return scat,
+
+    # Build the animation matrix and save it out as a local GIF file format
+    ani = animation.FuncAnimation(fig, update, frames=frames_count, interval=100, blit=True)
+    gif_path = "absorption_flow.gif"
+    ani.save(gif_path, writer='pillow', fps=10)
+    plt.close(fig)
+    return gif_path
+
+# Execute generator function and pipe rendering out into base64 HTML tags
+# (This ensures it bypasses browser sandbox filters perfectly)
+with st.spinner("Generating animation track..."):
+    gif_file = generate_absorption_animation(ca_intake, ca_excrete)
+    with open(gif_file, "rb") as f:
+        data_bytes = f.read()
+        b64_encoded = base64.b64encode(data_bytes).decode()
+        st.markdown(f'<img src="data:image/gif;base64,{b64_encoded}" width="100%">', unsafe_allow_html=True)
+
 
