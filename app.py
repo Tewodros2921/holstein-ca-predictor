@@ -10,7 +10,8 @@ st.set_page_config(
 
 st.title("🥛 Holstein Calcium Absorption Predictor")
 st.markdown("### 🎓 M.Sc. Research Project | The Hebrew University of Jerusalem (HUJI)")
-st.info("🔬 Developed at the **Volcani Agricultural Research Organization**, Department of Soil, Water, and Environmental Sciences.")
+# --- UPDATED INSTITUTIONAL AFFILIATION LINE ---
+st.info("🔬 Developed at the **Agricultural Research Organization - Volcani Institute**, Department of Ruminant Science.")
 
 st.markdown("""
 **Project Objective:** 
