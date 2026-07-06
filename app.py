@@ -21,15 +21,16 @@ insights to optimize livestock mineral management and reduce environmental excre
 
 # --- USER SIDEBAR INPUT PARAMETERS ---
 st.sidebar.header("🔬 Input Herd & Feed Metrics")
-# Changing this slider will now directly recalculate the apparent absorption (Y) below
+# Variable 2: DIM (Days in Milk)
 days_in_milk = st.sidebar.slider("Days in Milk (DIM)", 1, 300, 100, 5)
 
 # --- THE CALCULATOR AND DYNAMIC VARIABLE METRICS ---
 st.markdown("---")
 st.subheader("🐄 Holstein Cow Calcium Apparent Absorption Model")
 
-# Input fields for your math parameters
+# Variable 1: X (Calcium Intake in Feed)
 ca_intake = st.number_input("Calcium Intake in Feed (X, grams/day):", min_value=1.0, value=100.0, step=5.0)
+
 
 # --- CORE QUADRATIC MODEL PREDICTOR (Y) ---
 # Image Equation Formula Matrix: Y = 62.47 + (-0.2611 * X) + (0.000561 * X^2) + (-0.0202 * DIM)
@@ -38,6 +39,7 @@ beta_x = -0.2611
 beta_x_sq = 0.000561
 beta_dim = -0.0202
 
+# Solving for Y (Predicted Apparent Calcium Absorption Efficiency %)
 predicted_y = (
     intercept + 
     (beta_x * ca_intake) + 
@@ -45,32 +47,39 @@ predicted_y = (
     (beta_dim * days_in_milk)
 )
 
-# Constrain prediction output boundaries between realistic physiological scales (0% - 100%)
+# Apply physiological boundary constraints (0% to 100%)
 predicted_y = max(0.0, min(100.0, predicted_y))
 
-# Back-calculating the physical excreted feces amount based on your quadratic formula prediction
-# Since Y% = ((Intake - Feces) / Intake) * 100 -> Feces = Intake - (Y% * Intake / 100)
-calculated_feces = ca_intake - ((predicted_y / 100.0) * ca_intake)
-calculated_absorbed_g = ca_intake - calculated_feces
 
+# --- METABOLIC MASS BALANCE CALCULATIONS ---
+# Fecal Calcium is the structural mathematical difference between total Intake and absolute Absorption mass
+# Formula: Fecal Ca = Intake - (Absorption % * Intake)
+calculated_absorbed_g = (predicted_y / 100.0) * ca_intake
+calculated_feces = ca_intake - calculated_absorbed_g
+
+
+# --- RENDERING THE LIVE EXPERIMENTAL KPI SCOREBOARDS ---
 col_res1, col_res2, col_res3 = st.columns(3)
 with col_res1:
     st.metric(label="📥 Intake Calcium (X)", value=f"{ca_intake:.1f} g")
 with col_res2:
-    st.metric(label="💩 Estimated Fecal Excretion", value=f"{calculated_feces:.1f} g")
+    st.metric(label="💩 Calculated Fecal Calcium", value=f"{calculated_feces:.1f} g", delta="Excreted Waste", delta_color="inverse")
 with col_res3:
-    st.metric(label="✅ Predicted Absorbed Mass", value=f"{calculated_absorbed_g:.1f} g")
+    st.metric(label="✅ Predicted Absorbed Mass", value=f"{calculated_absorbed_g:.1f} g", delta="Retained Balance")
 
 
-# --- RENDERING THE ACTIVE OUTCOME MODEL SCOREBOARD PANEL ---
+# --- RENDERING THE MODEL OUTCOME METRIC PANEL ---
 st.markdown("---")
 st.subheader("🔮 Model Prediction Result (Y)")
 st.metric(label="Predicted Apparent Calcium Absorption Efficiency (Y)", value=f"{predicted_y:.2f} %")
 
-# Academic LaTex presentation formula card block
+# Academic LaTex presentation formula card block for your thesis committee
 st.markdown("### 🧮 Quadratic Model Regression Formula")
 st.latex(r"Y = 62.47 + (-0.2611 \times X) + (0.000561 \times X^2) + (-0.0202 \times \text{DIM})")
-st.info(f"**Live Math Loop Execution:** 62.47 + (-0.2611 × {ca_intake}) + (0.000561 × {ca_intake}²) + (-0.0202 × {days_in_milk}) = **{predicted_y:.2f}%**")
+
+# Live math text string showing exact substitution variables dynamically
+st.info(f"**Live Equation Process:** 62.47 + (-0.2611 × {ca_intake}) + (0.000561 × {ca_intake}²) + (-0.0202 × {days_in_milk}) = **{predicted_y:.2f}%**")
+st.success(f"**Fecal Mass Derivation:** {ca_intake}g Intake - ({predicted_y:.2f}% Absorption × {ca_intake}g) = **{calculated_feces:.1f} grams of Fecal Calcium**")
 
 if predicted_y < 25.0:
     st.warning("⚠️ **Low Predicted Efficiency:** High risk of mineral pass-through and environmental fecal excretion.")
@@ -116,11 +125,11 @@ st.markdown(
         <div style="text-align: center; background-color: #ffffff; color: #333; padding: 15px; border-radius: 8px; width: 32%; border: 2px solid #555; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
             <p style="margin: 0; font-weight: bold; font-size: 14px;">🐄 Holstein Body</p>
             <p style="font-size: 15px; margin: 5px 0 0 0; color: #2ca25f;"><b>Predicted Abs (Y):</b> {predicted_y:.1f}%</p>
-            <p style="font-size: 13px; margin: 2px 0 0 0; color: #666;">Retained: {calculated_absorbed_g:.1f} g/day</p>
+            <p style="font-size: 13px; margin: 2px 0 0 0; color: #666;">Absorbed: {calculated_absorbed_g:.1f} g/day</p>
         </div>
         <div class="animated-arrow-waste">➡️  ➡️</div>
         <div style="text-align: center; background-color: #d9534f; color: white; padding: 15px; border-radius: 8px; width: 25%; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            <p style="margin: 0; font-weight: bold; font-size: 14px;">2. Fecal Waste</p>
+            <p style="margin: 0; font-weight: bold; font-size: 14px;">2. Fecal Calcium</p>
             <p style="font-size: 20px; margin: 5px 0 0 0; font-weight: bold;">{calculated_feces:.1f} g</p>
         </div>
     </div>
