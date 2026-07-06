@@ -21,34 +21,15 @@ insights to optimize livestock mineral management and reduce environmental excre
 
 # --- USER SIDEBAR INPUT PARAMETERS ---
 st.sidebar.header("🔬 Input Herd & Feed Metrics")
+# Changing this slider will now directly recalculate the apparent absorption (Y) below
 days_in_milk = st.sidebar.slider("Days in Milk (DIM)", 1, 300, 100, 5)
 
 # --- THE CALCULATOR AND DYNAMIC VARIABLE METRICS ---
 st.markdown("---")
 st.subheader("🐄 Holstein Cow Calcium Apparent Absorption Model")
 
-col_input1, col_input2 = st.columns(2)
-with col_input1:
-    # This input maps directly as variable 'X' inside your quadratic model equation
-    ca_intake = st.number_input("Calcium Intake in Feed (X, grams/day):", min_value=1.0, value=100.0, step=5.0)
-with col_input2:
-    ca_excrete = st.number_input("Calcium Excreted in Feces (grams/day):", min_value=0.0, value=60.0, step=5.0)
-
-# Calculate observed mass balance parameters
-ca_absorbed = ca_intake - ca_excrete
-if ca_intake > 0:
-    observed_absorption_pct = (ca_absorbed / ca_intake) * 100
-else:
-    observed_absorption_pct = 0.0
-
-col_res1, col_res2, col_res3 = st.columns(3)
-with col_res1:
-    st.metric(label="📥 Intake Calcium (X)", value=f"{ca_intake} g")
-with col_res2:
-    st.metric(label="💩 Excreted Calcium", value=f"{ca_excrete} g", delta=f"-{ca_excrete} g", delta_color="inverse")
-with col_res3:
-    st.metric(label="✅ Observed Absorption", value=f"{observed_absorption_pct:.1f} %")
-
+# Input fields for your math parameters
+ca_intake = st.number_input("Calcium Intake in Feed (X, grams/day):", min_value=1.0, value=100.0, step=5.0)
 
 # --- CORE QUADRATIC MODEL PREDICTOR (Y) ---
 # Image Equation Formula Matrix: Y = 62.47 + (-0.2611 * X) + (0.000561 * X^2) + (-0.0202 * DIM)
@@ -66,6 +47,19 @@ predicted_y = (
 
 # Constrain prediction output boundaries between realistic physiological scales (0% - 100%)
 predicted_y = max(0.0, min(100.0, predicted_y))
+
+# Back-calculating the physical excreted feces amount based on your quadratic formula prediction
+# Since Y% = ((Intake - Feces) / Intake) * 100 -> Feces = Intake - (Y% * Intake / 100)
+calculated_feces = ca_intake - ((predicted_y / 100.0) * ca_intake)
+calculated_absorbed_g = ca_intake - calculated_feces
+
+col_res1, col_res2, col_res3 = st.columns(3)
+with col_res1:
+    st.metric(label="📥 Intake Calcium (X)", value=f"{ca_intake:.1f} g")
+with col_res2:
+    st.metric(label="💩 Estimated Fecal Excretion", value=f"{calculated_feces:.1f} g")
+with col_res3:
+    st.metric(label="✅ Predicted Absorbed Mass", value=f"{calculated_absorbed_g:.1f} g")
 
 
 # --- RENDERING THE ACTIVE OUTCOME MODEL SCOREBOARD PANEL ---
@@ -116,18 +110,18 @@ st.markdown(
     <div style="display: flex; justify-content: space-around; align-items: center; background-color: #f9f9f9; padding: 25px; border-radius: 10px; border: 1px solid #eaeaea;">
         <div style="text-align: center; background-color: #2b7bba; color: white; padding: 15px; border-radius: 8px; width: 25%; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
             <p style="margin: 0; font-weight: bold; font-size: 14px;">1. Intake Feed (X)</p>
-            <p style="font-size: 20px; margin: 5px 0 0 0; font-weight: bold;">{ca_intake} g</p>
+            <p style="font-size: 20px; margin: 5px 0 0 0; font-weight: bold;">{ca_intake:.1f} g</p>
         </div>
         <div class="animated-arrow">➡️  ➡️</div>
         <div style="text-align: center; background-color: #ffffff; color: #333; padding: 15px; border-radius: 8px; width: 32%; border: 2px solid #555; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
             <p style="margin: 0; font-weight: bold; font-size: 14px;">🐄 Holstein Body</p>
-            <p style="font-size: 15px; margin: 5px 0 0 0; color: #2ca25f;"><b>Observed Abs:</b> {observed_absorption_pct:.1f}%</p>
-            <p style="font-size: 13px; margin: 2px 0 0 0; color: #666;">Retained: {ca_absorbed:.1f} g/day</p>
+            <p style="font-size: 15px; margin: 5px 0 0 0; color: #2ca25f;"><b>Predicted Abs (Y):</b> {predicted_y:.1f}%</p>
+            <p style="font-size: 13px; margin: 2px 0 0 0; color: #666;">Retained: {calculated_absorbed_g:.1f} g/day</p>
         </div>
         <div class="animated-arrow-waste">➡️  ➡️</div>
         <div style="text-align: center; background-color: #d9534f; color: white; padding: 15px; border-radius: 8px; width: 25%; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
             <p style="margin: 0; font-weight: bold; font-size: 14px;">2. Fecal Waste</p>
-            <p style="font-size: 20px; margin: 5px 0 0 0; font-weight: bold;">{ca_excrete} g</p>
+            <p style="font-size: 20px; margin: 5px 0 0 0; font-weight: bold;">{calculated_feces:.1f} g</p>
         </div>
     </div>
     """,
