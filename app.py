@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import statsmodels.formula.api as smf
 import statsmodels.api as sm
 from scipy import stats
+import datetime
 
 # ---------------------------------------------------------
 # PAGE CONFIG
@@ -101,18 +102,6 @@ else:
     st.success("✅ Normal Range: Physiological baseline absorption levels maintained.")
 
 # ---------------------------------------------------------
-# OPTIONAL DATASET CALCULATION BLOCK
-# ---------------------------------------------------------
-if "df" in globals():
-    if "Ca_Intake" in df.columns and "Fecal_Ca" in df.columns:
-        df["Apparent_Ca_Absorption"] = (
-            (df["Ca_Intake"] - df["Fecal_Ca"]) / df["Ca_Intake"]
-        )
-        st.success("Apparent Calcium Absorption calculated successfully.")
-    else:
-        st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")
-
-# ---------------------------------------------------------
 # ADVANCED EXCEL‑STYLE SCHEDULING SECTION
 # ---------------------------------------------------------
 st.markdown("---")
@@ -129,6 +118,17 @@ schedule = pd.DataFrame({
 
 edited_schedule = st.data_editor(schedule, num_rows="dynamic")
 
+# ---------------------------------------------------------
+# FLASHING ALARM (VISUAL ONLY)
+# ---------------------------------------------------------
+now = datetime.datetime.now().strftime("%H:%M")
+
+if now in edited_schedule["Time"].values:
+    st.error("⏰ ALARM: It’s time for your scheduled task!")
+
+# ---------------------------------------------------------
+# EXCEL DOWNLOAD
+# ---------------------------------------------------------
 if st.button("Download Schedule (.xlsx)"):
     import openpyxl
     from openpyxl.styles import Alignment, Font
@@ -150,33 +150,6 @@ if st.button("Download Schedule (.xlsx)"):
 
     ws.column_dimensions["A"].width = 12
     ws.column_dimensions["B"].width = 40
-    # ---------------------------------------------------------
-# ALARM SOUND (UPLOAD YOUR OWN RECORDING)
-# ---------------------------------------------------------
-st.markdown("---")
-st.header("🔊 Custom Alarm Sound")
-
-uploaded_sound = st.file_uploader(
-    "Upload your alarm sound (MP3 or WAV):",
-    type=["mp3", "wav"]
-)
-
-if uploaded_sound is not None:
-    import base64
-
-    sound_bytes = uploaded_sound.read()
-    b64 = base64.b64encode(sound_bytes).decode()
-
-    st.success("Alarm sound uploaded successfully!")
-
-    if st.button("Play Alarm"):
-        audio_html = f"""
-            <audio autoplay>
-                <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
-            </audio>
-        """
-        st.markdown(audio_html, unsafe_allow_html=True)
-
 
     wb.save("schedule.xlsx")
     st.success("Saved schedule.xlsx")
