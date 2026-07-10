@@ -101,10 +101,10 @@ else:
     st.success("✅ Normal Range: Physiological baseline absorption levels maintained.")
 
 # ---------------------------------------------------------
-# ADVANCED EXCEL‑STYLE SCHEDULING SECTION
+# EXCEL‑STYLE SCHEDULING SECTION (NO DOWNLOAD)
 # ---------------------------------------------------------
 st.markdown("---")
-st.header("📅 Advanced Excel Scheduling Form")
+st.header("📅 Daily Schedule")
 
 schedule = pd.DataFrame({
     "Time": [
@@ -117,30 +117,4 @@ schedule = pd.DataFrame({
 
 edited_schedule = st.data_editor(schedule, num_rows="dynamic")
 
-# ---------------------------------------------------------
-# EXCEL DOWNLOAD
-# ---------------------------------------------------------
-if st.button("Download Schedule (.xlsx)"):
-    import openpyxl
-    from openpyxl.styles import Alignment, Font
-
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Daily Schedule"
-
-    ws["A1"] = "Time"
-    ws["B1"] = "Task"
-    ws["A1"].font = Font(bold=True)
-    ws["B1"].font = Font(bold=True)
-
-    for i, row in edited_schedule.iterrows():
-        ws[f"A{i+2}"] = row["Time"]
-        ws[f"B{i+2}"] = row["Task"]
-        ws[f"A{i+2}"].alignment = Alignment(horizontal="center")
-        ws[f"B{i+2}"].alignment = Alignment(horizontal="left")
-
-    ws.column_dimensions["A"].width = 12
-    ws.column_dimensions["B"].width = 40
-
-    wb.save("schedule.xlsx")
-    st.success("Saved schedule.xlsx")
+st.success("✔ Schedule updated. (Download disabled as requested)")
