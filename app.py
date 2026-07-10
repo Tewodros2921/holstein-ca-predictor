@@ -94,7 +94,13 @@ st.success(f"**Fecal Mass Derivation:** {ca_intake}g Intake - ({predicted_y:.2f}
 if predicted_y < 25.0:
     st.warning("⚠️ **Low Predicted Efficiency:** High risk of mineral pass-through and environmental fecal excretion.")
 elif predicted_y > 55.0:
-   if predicted_y < 25.0:
+  if predicted_y < 25.0:
+    st.warning("⚠️ Low Predicted Efficiency: High risk of mineral pass-through and environmental fecal excretion.")
+elif predicted_y > 55.0:
+    st.info("📈 High Predicted Activity: Intestinal active transport channels upregulated (high metabolic draw).")
+else:
+    st.success("✅ Normal Range: Physiological baseline absorption levels maintained.")
+
     st.warning("⚠️ **Low Predicted Efficiency:** High risk of mineral pass-through and environmental fecal excretion.")
 elif predicted_y > 55.0:
     st.info("📈 **High Predicted Activity:** Intestinal active transport channels upregulated (high metabolic draw).")
