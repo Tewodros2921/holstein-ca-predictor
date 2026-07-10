@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import statsmodels.formula.api as smf
 import statsmodels.api as sm
 from scipy import stats
-import datetime
 
 # ---------------------------------------------------------
 # PAGE CONFIG
@@ -117,14 +116,6 @@ schedule = pd.DataFrame({
 })
 
 edited_schedule = st.data_editor(schedule, num_rows="dynamic")
-
-# ---------------------------------------------------------
-# FLASHING ALARM (VISUAL ONLY)
-# ---------------------------------------------------------
-now = datetime.datetime.now().strftime("%H:%M")
-
-if now in edited_schedule["Time"].values:
-    st.error("⏰ ALARM: It’s time for your scheduled task!")
 
 # ---------------------------------------------------------
 # EXCEL DOWNLOAD
