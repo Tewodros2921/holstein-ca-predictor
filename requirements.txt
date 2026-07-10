@@ -5,3 +5,8 @@ matplotlib>=3.5.0
 pillow>=9.0.0
 scipy
 statsmodels
+streamlit-quill
+python-docx
+pandas
+openpyxl
+
