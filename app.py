@@ -113,6 +113,23 @@ if "df" in globals():
         st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")
 
 # ---------------------------------------------------------
+# WORD‑STYLE NOTE TAKING SECTION
+# ---------------------------------------------------------
+st.markdown("---")
+st.header("📝 Word‑Style Note Taking")
+
+from streamlit_quill import st_quill
+
+content = st_quill()   # MUST be called without arguments
+
+if st.button("Save Notes as Word (.docx)"):
+    from docx import Document
+    doc = Document()
+    doc.add_paragraph(content)
+    doc.save("note.docx")
+    st.success("Saved note.docx")
+
+# ---------------------------------------------------------
 # ADVANCED EXCEL‑STYLE SCHEDULING SECTION
 # ---------------------------------------------------------
 st.markdown("---")
@@ -153,4 +170,3 @@ if st.button("Download Schedule (.xlsx)"):
 
     wb.save("schedule.xlsx")
     st.success("Saved schedule.xlsx")
-   
