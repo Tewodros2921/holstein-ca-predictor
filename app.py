@@ -182,6 +182,10 @@ st.text(model.summary())
 anova_table = sm.stats.anova_lm(model, typ=2)
 st.subheader("ANOVA Table")
 st.write(anova_table)
+corr, pval = stats.pearsonr(df[predictor], df[response])
+st.write(f"Correlation: {corr:.3f}")
+st.write(f"P-value: {pval:.4f}")
+
 
 
 
