@@ -113,3 +113,5 @@ if "df" in globals():
         st.success("Apparent Calcium Absorption calculated successfully.")
     else:
         st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")
+        pip install seaborn
+
