@@ -204,6 +204,14 @@ import matplotlib.pyplot as plt
 import statsmodels.formula.api as smf
 import statsmodels.api as sm
 from scipy import stats
+if "Ca_Intake" in df.columns and "Fecal_Ca" in df.columns:
+    df["Apparent_Ca_Absorption"] = (
+        (df["Ca_Intake"] - df["Fecal_Ca"]) / df["Ca_Intake"]
+    )
+    st.success("Apparent Calcium Absorption calculated successfully.")
+else:
+    st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")
+
 
 
 
