@@ -194,6 +194,10 @@ st.pyplot(fig3
          st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")import streamlit as st
                                                                         ^
 SyntaxError: invalid syntax
+st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")
+
+import streamlit as st
+
 
 
 
