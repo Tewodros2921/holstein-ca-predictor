@@ -185,6 +185,13 @@ st.write(anova_table)
 corr, pval = stats.pearsonr(df[predictor], df[response])
 st.write(f"Correlation: {corr:.3f}")
 st.write(f"P-value: {pval:.4f}")
+fig3, ax3 = plt.subplots()
+sns.residplot(x=model.fittedvalues, y=model.resid, lowess=True, ax=ax3)
+ax3.set_xlabel("Fitted Values")
+ax3.set_ylabel("Residuals")
+ax3.set_title("Residual Plot")
+st.pyplot(fig3)
+
 
 
 
