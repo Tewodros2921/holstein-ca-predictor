@@ -211,6 +211,10 @@ if "Ca_Intake" in df.columns and "Fecal_Ca" in df.columns:
     st.success("Apparent Calcium Absorption calculated successfully.")
 else:
     st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")
+    st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")import streamlit as st
+                                                                        ^
+SyntaxError: invalid syntax
+
 
 
 
