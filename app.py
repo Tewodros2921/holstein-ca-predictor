@@ -137,3 +137,12 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+st.header("Data Processing")
+
+if "Ca_Intake" in df.columns and "Fecal_Ca" in df.columns:
+    df["Apparent_Ca_Absorption"] = (df["Ca_Intake"] - df["Fecal_Ca"]) / df["Ca_Intake"]
+    st.write("### Apparent Calcium Absorption Added to Dataset")
+    st.dataframe(df)
+else:
+    st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")
+
