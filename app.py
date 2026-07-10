@@ -111,18 +111,36 @@ if "df" in globals():
         st.success("Apparent Calcium Absorption calculated successfully.")
     else:
         st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")
-        please from my streamlin I want to add word style note taking and excel form for scheduling format to include from my Gihut streamline app
-        import streamlit as st
+
+# ---------------------------------------------------------
+# WORD‑STYLE NOTE TAKING SECTION
+# ---------------------------------------------------------
+st.markdown("---")
+st.header("📝 Word‑Style Note Taking")
+
 from streamlit_quill import st_quill
-
-st.title("Word‑Style Note Taking")
-
 content = st_quill(label="Write your notes here:", placeholder="Start typing...")
 
-if st.button("Save as DOCX"):
+if st.button("Save Notes as Word (.docx)"):
     from docx import Document
     doc = Document()
     doc.add_paragraph(content)
     doc.save("note.docx")
     st.success("Saved note.docx")
 
+# ---------------------------------------------------------
+# EXCEL‑STYLE SCHEDULING SECTION
+# ---------------------------------------------------------
+st.markdown("---")
+st.header("📅 Excel‑Style Scheduling Form")
+
+schedule = pd.DataFrame({
+    "Time": ["08:00", "09:00", "10:00", "11:00"],
+    "Task": ["", "", "", ""]
+})
+
+edited_schedule = st.data_editor(schedule)
+
+if st.button("Download Schedule (.xlsx)"):
+    edited_schedule.to_excel("schedule.xlsx", index=False)
+    st.success("Saved schedule.xlsx")
