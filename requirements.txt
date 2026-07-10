@@ -6,6 +6,8 @@ pillow>=9.0.0
 scipy
 statsmodels
 openpyxl
+streamlit-quill==0.0.3
+python-docx
 
 
 
