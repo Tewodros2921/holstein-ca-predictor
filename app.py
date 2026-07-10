@@ -217,6 +217,14 @@ SyntaxError: invalid syntax
 st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")import streamlit as st
 st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")import streamlit as st
 st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")
+import streamlit as st
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+from scipy import stats
+
 
 
 
