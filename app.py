@@ -162,7 +162,17 @@ if uploaded_file:
         df = pd.read_excel(uploaded_file)
 
     st.write("### Raw Data")
-    st.dataframe(df)
+    st.dataframe(df
+                st.header("Graphing Module")
+
+response = st.selectbox("Select Response Variable", df.columns)
+predictor = st.selectbox("Select Predictor Variable", df.columns)
+
+fig, ax = plt.subplots()
+sns.regplot(data=df, x=predictor, y=response, ax=ax, scatter_kws={'alpha':0.7})
+ax.set_title(f"{response} vs {predictor}")
+st.pyplot(fig)
+
 
 
 
