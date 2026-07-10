@@ -190,7 +190,11 @@ sns.residplot(x=model.fittedvalues, y=model.resid, lowess=True, ax=ax3)
 ax3.set_xlabel("Fitted Values")
 ax3.set_ylabel("Residuals")
 ax3.set_title("Residual Plot")
-st.pyplot(fig3)
+st.pyplot(fig3
+         st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")import streamlit as st
+                                                                        ^
+SyntaxError: invalid syntax
+
 
 
 
