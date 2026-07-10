@@ -7,6 +7,6 @@ scipy
 statsmodels
 streamlit-quill
 python-docx
-pandas
 openpyxl
+
 
