@@ -95,3 +95,5 @@ if predicted_y < 25.0:
     st.warning("⚠️ **Low Predicted Efficiency:** High risk of mineral pass-through and environmental fecal excretion.")
 elif predicted_y > 55.0:
     st.info("📈 **High Predicted Activity:**
+            st.info("📈 **High Predicted Activity:** Intestinal active transport channels upregulated (high metabolic draw).")
+
