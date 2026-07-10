@@ -215,6 +215,8 @@ else:
                                                                         ^
 SyntaxError: invalid syntax
 st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")import streamlit as st
+st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")import streamlit as st
+
 
 
 
