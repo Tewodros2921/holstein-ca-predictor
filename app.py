@@ -98,6 +98,14 @@ elif predicted_y > 55.0:
             st.info("📈 **High Predicted Activity:** Intestinal active transport channels upregulated (high metabolic draw).")
             st.info("📈 **High Predicted Activity:** Intestinal active transport channels upregulated (high metabolic draw).")
             st.info("📈 **High Predicted Activity:** Intestinal active transport channels upregulated (high metabolic draw).")
+            if "Ca_Intake" in df.columns and "Fecal_Ca" in df.columns:
+    df["Apparent_Ca_Absorption"] = (
+        (df["Ca_Intake"] - df["Fecal_Ca"]) / df["Ca_Intake"]
+    )
+    st.success("Apparent Calcium Absorption calculated successfully.")
+else:
+    st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")
+
 
 
 
