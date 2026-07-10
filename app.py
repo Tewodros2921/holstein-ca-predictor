@@ -153,23 +153,4 @@ if st.button("Download Schedule (.xlsx)"):
 
     wb.save("schedule.xlsx")
     st.success("Saved schedule.xlsx")
-    # ---------------------------------------------------------
-# WORD‑STYLE NOTE TAKING SECTION
-# ---------------------------------------------------------
-st.markdown("---")
-st.header("📝 Word‑Style Note Taking")
-
-from streamlit_quill import st_quill
-
-content = st_quill(
-    label="Write your notes here:",
-    placeholder="Start typing..."
-)
-
-if st.button("Save Notes as Word (.docx)"):
-    from docx import Document
-    doc = Document()
-    doc.add_paragraph(content)
-    doc.save("note.docx")
-    st.success("Saved note.docx")
-
+   
