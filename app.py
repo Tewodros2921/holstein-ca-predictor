@@ -1,3 +1,83 @@
+import streamlit as st
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+from scipy import stats
+
+# ---------------------------------------------------------
+# PAGE CONFIG
+# ---------------------------------------------------------
+st.set_page_config(
+    page_title="Holstein Ca Predictor",
+    page_icon="🥛",
+    layout="centered"
+)
+
+# ---------------------------------------------------------
+# TITLE & INTRO
+# ---------------------------------------------------------
+st.title("🥛 Holstein Calcium Absorption Predictor")
+st.markdown("### 🎓 M.Sc. Research Project | The Hebrew University of Jerusalem (HUJI)")
+st.info("🔬 Developed at the **Agricultural Research Organization - Volcani Institute**, Department of Ruminant Science.")
+
+st.markdown("""
+**Project Objective:**  
+This interactive multi-level meta-regression tool calculates the non-linear apparent calcium absorption 
+efficiency in lactating Holstein dairy cattle. It translates core metabolic data into actionable physiological 
+insights to optimize livestock mineral management and reduce environmental excretion pathways.
+""")
+
+# ---------------------------------------------------------
+# SIDEBAR INPUTS
+# ---------------------------------------------------------
+st.sidebar.header("🔬 Input Herd & Feed Metrics")
+days_in_milk = st.sidebar.slider("Days in Milk (DIM)", 1, 300, 100, 5)
+
+# ---------------------------------------------------------
+# MAIN MODEL INPUT
+# ---------------------------------------------------------
+st.markdown("---")
+st.subheader("🐄 Holstein Cow Calcium Apparent Absorption Model")
+
+ca_intake = st.number_input("Calcium Intake in Feed (X, grams/day):", min_value=1.0, value=100.0, step=5.0)
+
+# ---------------------------------------------------------
+# QUADRATIC MODEL
+# ---------------------------------------------------------
+intercept = 62.47
+beta_x = -0.2611
+beta_x_sq = 0.000561
+beta_dim = -0.0202
+
+predicted_y = (
+    intercept +
+    (beta_x * ca_intake) +
+    (beta_x_sq * (ca_intake ** 2)) +
+    (beta_dim * days_in_milk)
+)
+
+predicted_y = max(0.0, min(100.0, predicted_y))
+
+# ---------------------------------------------------------
+# MASS BALANCE
+# ---------------------------------------------------------
+calculated_absorbed_g = (predicted_y / 100.0) * ca_intake
+calculated_feces = ca_intake - calculated_absorbed_g
+
+# ---------------------------------------------------------
+# KPI METRICS
+# ---------------------------------------------------------
+col_res1, col_res2, col_res3 = st.columns(3)
+with col_res1:
+    st.metric("📥 Intake Calcium (X)", f"{ca_intake:.1f} g")
+with col_res2:
+    st.metric("💩 Calculated Fecal Calcium", f"{calculated_feces:.1f} g", delta="Excreted Waste", delta_color="inverse")
+with col_res3:
+    st.metric("✅ Predicted Absorbed Mass", f"{calculated_absorbed_g:.1f} g", delta="Retained Balance")
+
 # ---------------------------------------------------------
 # MODEL RESULT
 # ---------------------------------------------------------
@@ -24,5 +104,12 @@ else:
 # ---------------------------------------------------------
 # DATASET CALCULATION BLOCK
 # ---------------------------------------------------------
-if "Ca_Intake" in df.columns and "Fecal_Ca" in df.columns:
-    df["Apparent_Ca_Absorption"] = (
+# Only run this if df exists in your script
+if "df" in globals():
+    if "Ca_Intake" in df.columns and "Fecal_Ca" in df.columns:
+        df["Apparent_Ca_Absorption"] = (
+            (df["Ca_Intake"] - df["Fecal_Ca"]) / df["Ca_Intake"]
+        )
+        st.success("Apparent Calcium Absorption calculated successfully.")
+    else:
+        st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")
