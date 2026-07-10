@@ -96,4 +96,6 @@ if predicted_y < 25.0:
 elif predicted_y > 55.0:
     st.info("📈 **High Predicted Activity:**
             st.info("📈 **High Predicted Activity:** Intestinal active transport channels upregulated (high metabolic draw).")
+            st.info("📈 **High Predicted Activity:** Intestinal active transport channels upregulated (high metabolic draw).")
+
 
