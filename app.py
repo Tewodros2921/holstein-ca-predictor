@@ -113,34 +113,43 @@ if "df" in globals():
         st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")
 
 # ---------------------------------------------------------
-# WORD‑STYLE NOTE TAKING SECTION
+# ADVANCED EXCEL‑STYLE SCHEDULING SECTION
 # ---------------------------------------------------------
 st.markdown("---")
-st.header("📝 Word‑Style Note Taking")
-
-from streamlit_quill import st_quill
-content = st_quill(label="Write your notes here:", placeholder="Start typing...")
-
-if st.button("Save Notes as Word (.docx)"):
-    from docx import Document
-    doc = Document()
-    doc.add_paragraph(content)
-    doc.save("note.docx")
-    st.success("Saved note.docx")
-
-# ---------------------------------------------------------
-# EXCEL‑STYLE SCHEDULING SECTION
-# ---------------------------------------------------------
-st.markdown("---")
-st.header("📅 Excel‑Style Scheduling Form")
+st.header("📅 Advanced Excel Scheduling Form")
 
 schedule = pd.DataFrame({
-    "Time": ["08:00", "09:00", "10:00", "11:00"],
-    "Task": ["", "", "", ""]
+    "Time": [
+        "06:00", "07:00", "08:00", "09:00", "10:00",
+        "11:00", "12:00", "13:00", "14:00", "15:00",
+        "16:00", "17:00", "18:00"
+    ],
+    "Task": [""] * 13
 })
 
-edited_schedule = st.data_editor(schedule)
+edited_schedule = st.data_editor(schedule, num_rows="dynamic")
 
 if st.button("Download Schedule (.xlsx)"):
-    edited_schedule.to_excel("schedule.xlsx", index=False)
+    import openpyxl
+    from openpyxl.styles import Alignment, Font
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Daily Schedule"
+
+    ws["A1"] = "Time"
+    ws["B1"] = "Task"
+    ws["A1"].font = Font(bold=True)
+    ws["B1"].font = Font(bold=True)
+
+    for i, row in edited_schedule.iterrows():
+        ws[f"A{i+2}"] = row["Time"]
+        ws[f"B{i+2}"] = row["Task"]
+        ws[f"A{i+2}"].alignment = Alignment(horizontal="center")
+        ws[f"B{i+2}"].alignment = Alignment(horizontal="left")
+
+    ws.column_dimensions["A"].width = 12
+    ws.column_dimensions["B"].width = 40
+
+    wb.save("schedule.xlsx")
     st.success("Saved schedule.xlsx")
