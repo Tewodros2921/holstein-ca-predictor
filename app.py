@@ -144,5 +144,12 @@ if "Ca_Intake" in df.columns and "Fecal_Ca" in df.columns:
     st.write("### Apparent Calcium Absorption Added to Dataset")
     st.dataframe(df)
 else:
-    st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")
+    st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")import streamlit as st
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+from scipy import stats
+
 
