@@ -172,6 +172,14 @@ fig, ax = plt.subplots()
 sns.regplot(data=df, x=predictor, y=response, ax=ax, scatter_kws={'alpha':0.7})
 ax.set_title(f"{response} vs {predictor}")
 st.pyplot(fig)
+st.header("Statistical Analysis")
+
+formula = f"{response} ~ {predictor}"
+model = smf.ols(formula, data=df).fit()
+
+st.subheader("Linear Model Summary")
+st.text(model.summary())
+
 
 
 
