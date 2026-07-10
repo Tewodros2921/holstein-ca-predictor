@@ -179,6 +179,10 @@ model = smf.ols(formula, data=df).fit()
 
 st.subheader("Linear Model Summary")
 st.text(model.summary())
+anova_table = sm.stats.anova_lm(model, typ=2)
+st.subheader("ANOVA Table")
+st.write(anova_table)
+
 
 
 
