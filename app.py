@@ -111,3 +111,4 @@ if "df" in globals():
         st.success("Apparent Calcium Absorption calculated successfully.")
     else:
         st.warning("Dataset must include Ca_Intake and Fecal_Ca columns.")
+        please from my streamlin I want to add word style note taking and excel form for scheduling format to include from my Gihut streamline app
