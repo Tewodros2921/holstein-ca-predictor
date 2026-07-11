@@ -118,3 +118,20 @@ schedule = pd.DataFrame({
 edited_schedule = st.data_editor(schedule, num_rows="dynamic")
 
 st.success("✔ Schedule updated. (Download disabled as requested)")
+import cv2
+import streamlit as st
+
+st.title("Samsung A55 Night Camera Stream")
+
+stream_url = "http://YOUR_PUBLIC_IP:8080/video"  # replace with your public IP
+
+cap = cv2.VideoCapture(stream_url)
+
+frame_placeholder = st.empty()
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        st.write("No frame received")
+        break
+    frame_placeholder.image(frame, channels="BGR")
