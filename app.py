@@ -135,4 +135,4 @@ while True:
         st.write("No frame received")
         break
     frame_placeholder.image(frame, channels="BGR")
-http:stream_url = "http://10.147.17.10:8080/video"
+stream_url = "http://10.147.17.10:8080/video"
