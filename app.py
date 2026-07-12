@@ -69,3 +69,14 @@ if camera_url:
     st.video(camera_url)
 else:
     st.warning("Please enter a camera URL.")
+    
+import streamlit as st
+
+MJPEG_URL = "http://10.36.6.83:8080/video"
+
+st.markdown(
+    f"""
+    <img src="{MJPEG_URL}" width="100%" />
+    """,
+    unsafe_allow_html=True
+)
