@@ -40,7 +40,7 @@ dietary_ca = st.sidebar.slider("Dietary Ca (%)", 0.3, 1.2, 0.7)
 st.sidebar.header("📷 Camera Stream")
 camera_url = st.sidebar.text_input(
     "Enter camera URL",
-    "http://10.36.6.83:8080/video"   # Correct IP Webcam MJPEG stream
+    "http://10.36.6.83:8080/video"   # Replace this when your phone IP changes
 )
 
 # ---------------------------------------------------------
