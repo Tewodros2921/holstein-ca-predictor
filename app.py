@@ -40,11 +40,11 @@ dietary_ca = st.sidebar.slider("Dietary Ca (%)", 0.3, 1.2, 0.7)
 st.sidebar.header("📷 Camera Stream")
 camera_url = st.sidebar.text_input(
     "Enter camera URL",
-    "http://10.147.17.10:8080/video"
+    "http://10.36.6.83:8080/video"   # FIXED URL
 )
 
 # ---------------------------------------------------------
-# SIMPLE DEMO MODEL (replace with your real regression)
+# SIMPLE DEMO MODEL
 # ---------------------------------------------------------
 absorption = (
     0.25 +
@@ -60,23 +60,19 @@ st.subheader("📈 Predicted Apparent Ca Absorption")
 st.metric("Absorption Efficiency (%)", f"{absorption*100:.2f}")
 
 # ---------------------------------------------------------
-# CAMERA DISPLAY
+# CAMERA DISPLAY (MJPEG FIXED)
 # ---------------------------------------------------------
 st.subheader("📷 Live Camera Stream")
 
 if camera_url:
     st.markdown(f"**Camera URL:** {camera_url}")
-    st.video(camera_url)
+
+    # MJPEG stream must be displayed using <img>, NOT st.video()
+    st.markdown(
+        f"""
+        <img src="{camera_url}" width="100%" />
+        """,
+        unsafe_allow_html=True
+    )
 else:
     st.warning("Please enter a camera URL.")
-    
-import streamlit as st
-
-MJPEG_URL = "http://10.36.6.83:8080/video"
-
-st.markdown(
-    f"""
-    <img src="{MJPEG_URL}" width="100%" />
-    """,
-    unsafe_allow_html=True
-)
